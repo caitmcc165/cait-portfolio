@@ -1,0 +1,4 @@
+# base64 copy of the model, only needed to open index.html from file:// (build with tools/prepare-flower.sh)
+assets/hibiscus.glb.js
+node_modules/
+.DS_Store

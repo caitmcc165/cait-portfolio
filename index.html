@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caitlin McCollom · Software engineer, operations</title>
+<meta name="description" content="Caitlin McCollom builds software for the people and operations behind real businesses: implementation engineering, DevOps and software delivery. La Mesa, California.">
+<meta name="theme-color" content="#F6F3EA">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23F6F3EA'/%3E%3Crect y='17' width='32' height='15' fill='%2387B8AD'/%3E%3Crect y='16' width='32' height='1.5' fill='%23376F79'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..500,0..100&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   Sunset hibiscus. Every color comes from the hero flower.
+     night / cream      the hero: Night Swim violet around the flower
+     paper / sand       petal-paper surfaces for the work
+     ink / muted        violet ink, text and structure
+     petal / apricot    the brand: name accent, buttons, urgent orders · carrier B
+     amethyst / pollen  interaction and "ok": links, focus, carrier A, passed checks · the role line
+     alert (crimson)    the flower's eye, only for trouble: late orders, failed checks, offline
+   The 3D materials read these same variables.
+   ===================================================================== */
+:root{
+  /* Sunset hibiscus palette, sampled from the hero model (Tripo3D generation) */
+  --night:#150E2E; --night-2:#21184A; --cream:#FFF3EA; --cream-2:#D9CFEA;          /* hero: Night Swim violet (her board), lilac-mist text */
+  --paper:#FFF6F0; --card:#FFFBF7; --sand:#F6DCCD; --sand-2:#FBEADF;                /* petal-paper surfaces */
+  --line:rgba(43,16,56,.13); --line-2:rgba(43,16,56,.26);
+  --ink:#2B1038; --muted:#62587A;                                                   /* her violet ink */
+  --petal:#FF7A55; --petal-2:#FFB07A; --petal-text:#B8401F; --blush:#FFC2CC;        /* brand: the sunset petal */
+  --plum:#6B3F8F; --plum-deep:#4E2F66; --plum-soft:#E4DCFF; --pollen:#E7B93E;       /* amethyst (her hero color): interaction + "ok"; pollen note */
+  --apricot:#F2A65A;                                                                /* carrier B */
+  --alert:#C8102E; --alert-text:#A00D26;                                            /* the crimson eye: only for trouble */
+  --r1:4px; --r2:8px; --r3:14px;
+  --serif:Fraunces,Georgia,serif; --sans:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font:400 17.5px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--petal-text);text-underline-offset:3px;text-decoration-thickness:1px}
+a:hover{color:var(--alert-text)}
+:focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:var(--r1)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+.mono{font-family:var(--mono)}
+.kicker{font:500 12.5px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:var(--r2);border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  font:500 15.5px var(--sans);text-decoration:none;cursor:pointer;transition:background .2s var(--ease),color .2s}
+.btn:hover{background:#3E2160;color:var(--paper)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn.ghost:hover{background:var(--sand-2);color:var(--ink)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn.small{height:36px;padding:0 13px;font-size:14px}
+
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:rgba(246,243,234,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:60px}
+.mark{font:500 19px var(--serif);color:var(--ink);text-decoration:none;font-variation-settings:"SOFT" 60}
+.nav nav{display:flex;gap:26px}
+.nav nav a{color:var(--ink);text-decoration:none;font:500 14.5px var(--sans)}
+.nav nav a:hover{color:var(--plum)}
+
+/* 01 introduction: the hibiscus at dusk */
+header.top.dark{background:rgba(21,14,46,.84);border-color:rgba(255,243,234,.08)}
+header.top.dark.clear{background:transparent;border-color:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}
+header.top.dark .mark,header.top.dark .nav nav a{color:var(--cream)}
+header.top{transition:background .35s var(--ease),border-color .35s}
+.hero{position:relative;margin-top:-61px;padding:130px 0 70px;color:var(--cream);overflow:hidden;
+  background:radial-gradient(40% 60% at 74% 50%, #4A2A7A 0%, #2A1A55 36%, var(--night) 74%),radial-gradient(50% 40% at 20% 110%, rgba(10,218,231,.10), rgba(10,218,231,0) 70%)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:24px;align-items:center;min-height:min(78vh,760px)}
+.hero .kicker{color:var(--cream-2)}
+.hero h1{font:400 clamp(48px,6.2vw,84px)/1 var(--serif);letter-spacing:-.02em;font-variation-settings:"SOFT" 70,"opsz" 144;margin:18px 0 22px}
+.hero h1 em{font-style:italic;color:var(--petal-2)}
+.hero h1 em .ch{display:inline-block;transform-origin:50% 88%;will-change:transform}
+.hero .headline{font:500 clamp(22px,2.3vw,28px)/1.32 var(--sans);letter-spacing:-.012em;max-width:24ch}
+.hero .roles{margin-top:16px;font:500 14px var(--mono);color:var(--pollen)}
+.hero .bio{color:var(--cream-2);max-width:46ch;margin-top:22px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero .btn{background:var(--petal);border-color:var(--petal);color:var(--night)}
+.hero .btn:hover{background:var(--petal-2);border-color:var(--petal-2);color:var(--night)}
+.hero .btn.ghost{background:transparent;color:var(--cream);border-color:rgba(247,238,230,.35)}
+.hero .btn.ghost:hover{background:rgba(247,238,230,.08);color:var(--cream)}
+.flower{position:relative;height:min(74vh,700px);min-height:420px}
+/* one fixed canvas: the flower lives in the hero, then docks on the right edge and follows the focused section */
+#flower-gl{position:fixed;inset:0;width:100vw;height:100vh;z-index:6;pointer-events:none;opacity:0;transition:opacity 1.6s var(--ease)}
+#flower-gl.ready{opacity:1}
+.hero-grid > div:first-child{position:relative;z-index:1}
+.flower.missing{display:none}
+.flower::before{content:"";position:absolute;inset:14% 6%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,176,122,.28),rgba(255,122,85,.10) 55%,rgba(255,122,85,0));filter:blur(14px)}
+/* focus zones: the section the flower is attached to fades to dusk, the rest back to petal paper.
+   Registered properties let the text colors interpolate along with the background. */
+@property --ink{syntax:'<color>';inherits:true;initial-value:#2B1038}
+@property --muted{syntax:'<color>';inherits:true;initial-value:#62587A}
+@property --line{syntax:'<color>';inherits:true;initial-value:rgba(43,16,56,.13)}
+@property --line-2{syntax:'<color>';inherits:true;initial-value:rgba(43,16,56,.26)}
+@property --petal-text{syntax:'<color>';inherits:true;initial-value:#B8401F}
+.zone{position:relative;background-color:var(--paper);color:var(--ink);
+  transition:background-color .9s var(--ease),--ink .9s var(--ease),--muted .9s var(--ease),--line .9s var(--ease),--line-2 .9s var(--ease),--petal-text .9s var(--ease)}
+.zone::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .9s var(--ease);
+  background:radial-gradient(34% 44% at 92% 50%, rgba(255,150,110,.14), rgba(109,0,153,.22) 42%, rgba(21,14,46,0) 80%),radial-gradient(60% 50% at 10% 100%, rgba(10,218,231,.07), rgba(10,218,231,0) 70%)}
+.zone > .wrap{position:relative;z-index:1}
+.zone.dark{background-color:var(--night);--ink:#FFF3EA;--muted:#D9CFEA;--line:rgba(255,243,234,.14);--line-2:rgba(255,243,234,.3);--petal-text:#FFB07A}
+.zone.dark::after{opacity:1}
+/* cards keep their own light surface inside a dark zone */
+.zone .case,.zone .mini,.zone .bridge{--ink:#2B1038;--muted:#62587A;--line:rgba(43,16,56,.13);--line-2:rgba(43,16,56,.26);--petal-text:#B8401F;color:var(--ink)}
+.evidence-zone{padding:4px 0 8px}
+.credit{font:400 11.5px var(--mono);color:inherit;opacity:.8}
+.evidence{display:grid;grid-template-columns:repeat(4,1fr);margin:0 auto;border-bottom:1px solid var(--line)}
+.evidence > div{padding:30px 22px 28px 0}
+.evidence > div + div{padding-left:22px;border-left:1px solid var(--line)}
+.evidence .n{font:400 34px/1.1 var(--serif);font-variation-settings:"SOFT" 30;letter-spacing:-.01em}
+.evidence .n b{font-weight:400;color:var(--petal-text)}
+.evidence .n.t{font:500 16px/1.5 var(--mono);color:var(--ink)}
+.evidence p{font-size:14.5px;color:var(--muted);margin-top:6px}
+
+/* section scaffolding; the grid is the transition into the technical work */
+section.chapter{padding:110px 0 40px}
+.chapter-head{display:grid;grid-template-columns:200px 1fr;gap:28px;margin-bottom:44px;align-items:baseline}
+.chapter-head .num{font:500 13px var(--mono);color:var(--muted);letter-spacing:.06em}
+.chapter-head h2{font:400 clamp(34px,4vw,48px)/1.1 var(--serif);letter-spacing:-.015em;font-variation-settings:"SOFT" 40}
+.chapter-head p{grid-column:2;color:var(--muted);max-width:62ch;margin-top:10px}
+.work{position:relative}
+.work::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.2s var(--ease);
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 220px,#000 70%,transparent);mask-image:linear-gradient(180deg,transparent 0,#000 220px,#000 70%,transparent)}
+.work.in::before{opacity:.5}
+
+/* case study frame */
+.case{position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--r3);margin-bottom:40px;overflow:hidden}
+.case-head{display:grid;grid-template-columns:1fr auto;gap:20px;padding:26px 28px 20px;border-bottom:1px solid var(--line)}
+.case-head h3{font:600 25px/1.25 var(--sans);letter-spacing:-.012em}
+.case-head .fast{margin-top:6px;color:var(--muted);max-width:76ch}
+.tag{display:inline-block;font:500 12px var(--mono);padding:3px 8px;border-radius:var(--r1);background:var(--sand-2);color:var(--ink);white-space:nowrap}
+.tag.planned{border:1px dashed var(--line-2);background:transparent}
+.disclose{font:400 12.5px var(--mono);color:var(--muted)}
+
+/* delivery challenge */
+.sim{display:grid;grid-template-columns:minmax(0,1fr) 330px}
+.stage{position:relative;aspect-ratio:16/10;background:var(--paper);border-right:1px solid var(--line)}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage .fallback{position:absolute;inset:0;display:grid;place-items:center;padding:30px;text-align:center;font:400 13px var(--mono);color:var(--muted)}
+.stage.live .fallback{display:none}
+.stage .legend{position:absolute;left:14px;bottom:12px;display:flex;gap:14px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--ink);background:rgba(251,249,244,.86);padding:6px 10px;border-radius:var(--r2);border:1px solid var(--line)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.stage .hint{position:absolute;right:14px;top:12px;font:400 12px var(--mono);color:var(--muted)}
+.panel{padding:20px 20px 18px;display:flex;flex-direction:column;gap:16px;font-size:15px}
+.clock{display:flex;justify-content:space-between;align-items:baseline}
+.clock b{font:400 34px/1 var(--serif);font-variation-settings:"SOFT" 30}
+.goal{font:400 12.5px var(--mono);color:var(--muted)}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden}
+.kpis div{background:var(--card);padding:9px 11px}
+.kpis span{display:block;font:400 11.5px var(--mono);color:var(--muted)}
+.kpis b{font:500 19px var(--mono)}
+.kpis b.bad{color:var(--alert-text)}
+.controls{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:var(--r2);overflow:hidden}
+.seg button{font:500 13.5px var(--sans);padding:7px 12px;background:transparent;border:0;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg button:disabled{opacity:.45;cursor:not-allowed}
+.ctl-label{font:400 12px var(--mono);color:var(--muted);width:100%}
+.log{list-style:none;font:400 12.5px/1.5 var(--mono);color:var(--muted);border-top:1px solid var(--line);padding-top:10px;min-height:120px}
+.log li{display:grid;grid-template-columns:44px 1fr;gap:6px;margin:2px 0}
+.log li.alert{color:var(--alert-text)} .log li.decision{color:var(--plum-deep)} .log li.success{color:var(--ink)}
+.inspect{border:1px solid var(--line);border-radius:var(--r2);padding:10px 12px;font-size:14px;color:var(--muted);background:var(--paper)}
+.inspect b{color:var(--ink)}
+.result{display:none;padding:22px 28px;border-top:1px solid var(--line);background:var(--sand-2)}
+.result.on{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start}
+.result .score{font:400 52px/1 var(--serif)}
+.result h4{font:600 18px var(--sans);margin-bottom:4px}
+.result p{color:var(--ink);max-width:70ch}
+.result p + p{margin-top:8px}
+.how{padding:16px 28px 22px;border-top:1px solid var(--line)}
+.how summary{cursor:pointer;font:500 14.5px var(--sans);color:var(--plum)}
+.how .cols{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:14px;font-size:15px;color:var(--muted)}
+.how ul{padding-left:18px}
+.how li{margin:3px 0}
+.how code{font:400 13px var(--mono);background:var(--sand-2);padding:1px 5px;border-radius:var(--r1);color:var(--ink)}
+
+/* break the deployment */
+.deploy{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:28px;padding:24px 28px}
+.faults{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 16px}
+.fault{display:inline-flex;align-items:center;gap:8px;font:500 14px var(--sans);padding:7px 12px;border:1px solid var(--line-2);border-radius:var(--r2);cursor:pointer;user-select:none;background:var(--paper)}
+.fault input{accent-color:var(--alert-text)}
+.fault:has(input:checked){border-color:var(--alert-text);color:var(--alert-text)}
+.stages{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:18px 0 12px;list-style:none}
+.stages li{border:1.5px dashed var(--line-2);border-radius:var(--r2);padding:10px 8px 9px;font:500 12.5px/1.3 var(--mono);color:var(--muted);min-height:66px;display:flex;flex-direction:column;justify-content:space-between;transition:all .25s var(--ease)}
+.stages li .st{font-size:11.5px}
+.stages li.running{border-style:solid;border-color:var(--plum);color:var(--ink)}
+.stages li.passed{border-style:solid;border-color:var(--plum);background:#EEE7F7;color:var(--ink)}
+.stages li.failed{border-style:solid;border-color:var(--alert);background:#F7E1E0;color:var(--alert-text)}
+.stages li.skipped{opacity:.45}
+.verdict{font-size:15.5px;min-height:52px}
+.verdict b{font-weight:600}
+.verdict.bad b{color:var(--alert-text)} .verdict.good b{color:var(--plum-deep)}
+.game-art img{width:100%;display:block;border-radius:var(--r2);border:1px solid var(--line)}
+.game-art p{font:400 12px var(--mono);color:var(--muted);margin-top:8px}
+
+/* order engine */
+.engine{padding:24px 28px}
+.lanes{display:grid;gap:14px;margin:16px 0 6px}
+.lane{display:grid;grid-template-columns:150px 1fr 220px;gap:16px;align-items:center}
+.lane h4{font:600 15px var(--sans)}
+.lane h4 span{display:block;font:400 12px var(--mono);color:var(--muted)}
+.dots{display:grid;grid-template-columns:repeat(50,1fr);gap:3px}
+.dots i{aspect-ratio:1;border-radius:2px;background:var(--sand)}
+.dots i.u{background:var(--petal)}
+.dots i.u.late{background:var(--alert)}
+.dots i.late:not(.u){background:var(--sand);box-shadow:inset 0 0 0 1.5px var(--alert)}
+.lane .m{font:400 13px var(--mono);color:var(--muted)}
+.lane .m b{color:var(--ink);font-weight:500}
+.lane .m b.bad{color:var(--alert-text)}
+.engine pre{font:400 13px/1.55 var(--mono);background:var(--ink);color:#E8E4DA;padding:14px 16px;border-radius:var(--r2);overflow:auto;margin-top:12px}
+.engine pre .c{color:#9FB7B2}
+
+/* more work */
+.more{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.mini{border:1px solid var(--line);border-radius:var(--r3);padding:22px 24px;background:var(--card)}
+.mini h3{font:600 19px var(--sans);margin:8px 0 6px}
+.mini p{color:var(--muted);font-size:15.5px}
+
+/* 03 experience */
+.exp{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.exp h3{font:500 13px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.role{padding:16px 0;border-bottom:1px solid var(--line)}
+.role .when{font:400 13px var(--mono);color:var(--muted)}
+.role h4{font:600 17.5px var(--sans);margin:2px 0 4px}
+.role p{color:var(--muted);font-size:15.5px}
+.bridge{margin-top:34px;padding:22px 26px;border-radius:var(--r3);background:var(--sand-2);font:400 21px/1.45 var(--serif);font-variation-settings:"SOFT" 40;max-width:900px}
+
+/* 04 contact: warmth returns */
+.contact{padding:120px 0 90px}
+.contact h2 em{font-style:italic;color:var(--petal-text)}
+.zone.dark .btn{background:var(--petal);border-color:var(--petal);color:var(--night)}
+.zone.dark .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.zone.dark .case .btn{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.zone.dark .case .btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.contact h2{font:400 clamp(38px,5vw,64px)/1.05 var(--serif);letter-spacing:-.02em;font-variation-settings:"SOFT" 60;max-width:16ch}
+.contact p{color:var(--muted);max-width:56ch;margin-top:18px}
+.contact .ctas{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+footer{background:var(--night);padding:18px 0 36px;font:400 12.5px var(--mono);color:var(--cream-2);border-top:1px solid rgba(247,238,230,.1)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media (max-width:1040px){
+  .hero-grid{grid-template-columns:1fr} .flower{height:420px;order:-1;margin-bottom:-40px}
+  .sim{grid-template-columns:1fr} .stage{border-right:0;border-bottom:1px solid var(--line)}
+  .deploy{grid-template-columns:1fr} .game-art{max-width:220px}
+  .stages{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .lane{grid-template-columns:1fr} .how .cols,.more,.exp{grid-template-columns:1fr}
+  .chapter-head{grid-template-columns:1fr} .chapter-head p{grid-column:1}
+  .evidence{grid-template-columns:1fr 1fr} .evidence > div:nth-child(3){border-left:0;padding-left:0}
+}
+@media (max-width:620px){
+  .nav nav a.hide-sm{display:none}
+  .evidence{grid-template-columns:1fr} .evidence > div{border-left:0!important;padding-left:0!important;border-bottom:1px solid var(--line);padding-bottom:16px}
+  .result.on{grid-template-columns:1fr}
+  .dots{grid-template-columns:repeat(25,1fr)}
+  .case-head{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none!important} }
+</style>
+</head>
+<body>
+<header class="top dark">
+  <div class="wrap nav">
+    <a class="mark" href="#top">Caitlin McCollom</a>
+    <nav aria-label="Sections"><a href="#work">Work</a><a href="#experience" class="hide-sm">Experience</a><a href="#contact">Contact</a></nav>
+  </div>
+</header>
+
+<main id="top">
+  <!-- 01 · Introduction -->
+  <section class="hero" data-focus aria-labelledby="name">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="kicker">Software engineer · operations</div>
+        <h1 id="name">Caitlin <em id="surname" aria-label="McCollom">McCollom</em></h1>
+        <p class="headline">I build software for the people and operations behind real businesses.</p>
+        <p class="roles">Implementation engineering / DevOps / software delivery</p>
+        <p class="bio">Before software, I spent over a decade running operations: schedules, client onboarding and training, delivery logistics and system rollouts. That's who I build for now. M.S. Software Engineering, WGU. La Mesa, California.</p>
+        <div class="ctas"><a class="btn" href="#work">Selected work</a><a class="btn ghost" href="https://www.linkedin.com/in/mccollomcaitlin/" target="_blank" rel="noopener">LinkedIn</a><a class="btn ghost" href="https://github.com/caitmcc165" target="_blank" rel="noopener">GitHub</a></div>
+      </div>
+      <div class="flower" id="flower" aria-hidden="true"></div>
+    </div>
+  </section>
+  <section class="zone evidence-zone" data-focus aria-label="Results">
+  <div class="wrap">
+    <div class="evidence">
+      <div><div class="n t">Python · Flask<br>GitLab CI · Selenium</div><p>microservices order system with automated tests · WGU coursework</p></div>
+      <div><div class="n">3 <b>→</b> 1</div><p>CRM platforms evaluated, presented to the CEO, then rolled out and trained · TAG Chemical, 2023</p></div>
+      <div><div class="n">~200</div><p>clients on a daily delivery workflow I designed and ran with two carriers · TAG Chemical, 2023</p></div>
+      <div><div class="n">86 <b>→</b> 172</div><p>students enrolled over seven years running a school's operations and a team of up to 12</p></div>
+    </div>
+  </div>
+  </section>
+
+
+  <section class="chapter work zone" id="work" aria-labelledby="work-h">
+    <div class="wrap">
+      <div class="chapter-head"><div class="num">02 / SELECTED WORK</div><div><h2 id="work-h">Systems you can run, break and inspect</h2>
+        <p>Three working models of the kind of systems I've operated and build now. The logic behind each is a plain, tested JavaScript module; the visuals only display its state.</p></div></div>
+
+      <!-- Delivery challenge -->
+      <article class="case" id="delivery" data-focus aria-labelledby="dc-h">
+        <div class="case-head">
+          <div><h3 id="dc-h">The Delivery Challenge</h3>
+            <p class="fast"><b>In 20 seconds:</b> at TAG Chemical I coordinated daily deliveries between about 200 clients, two transport companies and one manufacturer. This is a playable, scaled-down model of that kind of operation. At 11:00 a carrier breaks down. Can you still hit 95% on time?</p></div>
+          <div><span class="tag">operations · simulation</span></div>
+        </div>
+        <div class="sim">
+          <div class="stage" id="stage"><canvas id="gl" aria-hidden="true"></canvas>
+            <p class="fallback">The 3D view needs WebGL. The simulation still runs: use the controls and numbers on the right.</p>
+            <div class="legend"><span><i style="background:var(--card);box-shadow:inset 0 0 0 1px var(--line-2)"></i>order</span><span><i style="background:var(--alert)"></i>late order</span><span><i style="background:var(--plum)"></i>carrier A</span><span><i style="background:var(--apricot)"></i>carrier B</span></div>
+            <span class="hint">drag to look around · click a building</span>
+          </div>
+          <div class="panel">
+            <div class="clock"><b id="clk">8:00</b><span class="goal">goal ≥ 95% on time</span></div>
+            <div class="kpis">
+              <div><span>on time</span><b id="k-rate">100%</b></div><div><span>delivered</span><b id="k-del">0</b></div>
+              <div><span>late or missed</span><b id="k-late">0</b></div><div><span>waiting A · B</span><b id="k-wait">0 · 0</b></div>
+            </div>
+            <div class="controls">
+              <div class="row"><button class="btn small" id="run">Start the day</button><div class="seg" aria-label="Speed"><button id="sp1" aria-pressed="true">1×</button><button id="sp3" aria-pressed="false">3×</button></div><button class="btn small ghost" id="reset">Reset</button></div>
+              <span class="ctl-label" id="lock" style="color:var(--plum-deep)"></span>
+              <span class="ctl-label">routing</span>
+              <div class="seg" aria-label="Routing policy"><button id="pol-z" aria-pressed="true">Fixed zones</button><button id="pol-b" aria-pressed="false">Balance load</button></div>
+              <span class="ctl-label">capacity · <span id="left">2</span> spare trucks</span>
+              <div class="row"><button class="btn small ghost" id="addA">+ truck to A</button><button class="btn small ghost" id="addB">+ truck to B</button></div>
+            </div>
+            <div class="inspect" id="inspect">Click a building to inspect it.</div>
+            <ul class="log" id="log" aria-live="polite"></ul>
+          </div>
+        </div>
+        <div class="result" id="result"></div>
+        <details class="how"><summary>How this works</summary>
+          <div class="cols">
+            <div><ul>
+              <li>One simulated minute per tick, 8:00 to 22:00. Orders arrive until 18:00 and are promised within 4 hours.</li>
+              <li>The manufacturer preps each order, then hands it to a carrier. <b>Fixed zones</b> sends north-street orders to A and south-street orders to B. <b>Balance load</b> reroutes around an offline carrier and evens out queues.</li>
+              <li>Trucks carry up to 8 orders and leave when full or when the oldest order has waited 25 minutes.</li>
+              <li>On-time rate counts every order that is due; at the end of the day, undelivered orders count as missed.</li>
+            </ul></div>
+            <div><ul>
+              <li>Simulation: <code>js/sim.js</code>, pure and seeded, so the same choices always give the same day. No DOM, no WebGL.</li>
+              <li>Tests: <code>tests/sim.test.js</code>, 15 tests (<code>npm test</code>). They include "an unanswered outage misses the goal", "rerouting alone helps but is not enough" and "trucks sent to the offline carrier are wasted".</li>
+              <li>Renderer: three.js reads the simulation's state each frame and never changes it.</li>
+              <li class="disclose">Illustrative model, scaled from ~200 clients to 24. Not TAG Chemical's data or software.</li>
+            </ul></div>
+          </div>
+        </details>
+      </article>
+
+      <!-- Break the deployment -->
+      <article class="case" id="deploy" data-focus aria-labelledby="bd-h">
+        <div class="case-head">
+          <div><h3 id="bd-h">Break the deployment</h3>
+            <p class="fast"><b>In 20 seconds:</b> this is the pipeline I'm building around my Unity game, Low Tide. Every pull request is scanned and tested before it can merge; merges to main are built for WebGL and published. Slip a problem into a change and see which check stops it.</p></div>
+          <div><span class="tag planned">pipeline in progress</span></div>
+        </div>
+        <div class="deploy">
+          <div>
+            <div class="kicker">add a problem to this change</div>
+            <div class="faults" id="faults"></div>
+            <button class="btn" id="ship">Open pull request</button>
+            <ol class="stages" id="stages"></ol>
+            <p class="verdict" id="verdict" aria-live="polite">Choose zero or more problems, then open the pull request.</p>
+            <p class="disclose">Runs in your browser to show how the pipeline is designed to behave. Not connected to GitHub yet; real run results will replace this when the pipeline is live. Timings are illustrative.</p>
+          </div>
+          <figure class="game-art"><img src="assets/title-screen.png" alt="Low Tide title screen concept: a fishing line drops from a sunset sky to a pink lure above a coral fish." width="170" height="302" loading="lazy">
+            <p>Low Tide, title screen concept. The game keeps its own look.</p></figure>
+        </div>
+      </article>
+
+      <!-- Order engine -->
+      <article class="case" id="engine" data-focus aria-labelledby="oe-h">
+        <div class="case-head">
+          <div><h3 id="oe-h">The order engine</h3>
+            <p class="fast"><b>In 20 seconds:</b> the same 100 orders, about 15 of them urgent, processed two ways. A FIFO queue serves them in arrival order; a priority queue (a binary heap) always serves the most urgent first. Watch which one makes urgent orders late.</p></div>
+          <div><span class="tag">data structures · coursework idea</span></div>
+        </div>
+        <div class="engine">
+          <div class="row"><button class="btn small" id="oe-run">Run 100 orders</button><button class="btn small ghost" id="oe-new">New batch</button><span class="disclose" id="oe-batch"></span></div>
+          <div class="lanes" id="lanes"></div>
+          <p class="disclose">Orders arrive faster than they can be processed (each takes 25% longer than the average gap between arrivals), so a queue always builds and the order you serve them in matters. Squares in processing order. Filled = urgent (crimson if late), outlined crimson = a regular order that ran late. My inventory project used these structures in Python; this JavaScript version runs here so you can try it.</p>
+          <pre aria-label="Heap insert, from js/sim.js"><span class="c">// push: add at the next open slot, then rise only past less urgent orders · O(log n)</span>
+push(x) {
+  const a = this.a; a.push(x);
+  let i = a.length - 1;
+  while (i > 0) {
+    const p = (i - 1) >> 1;
+    if (!this.less(a[i], a[p])) break;
+    [a[i], a[p]] = [a[p], a[i]]; i = p;
+  }
+}</pre>
+        </div>
+      </article>
+
+      <div class="more" data-focus>
+        <div class="mini"><span class="tag">built · WGU coursework</span><h3>Microservices order management</h3>
+          <p>Order management split into small Python/Flask services that talk over REST, with a GitLab CI pipeline running automated Selenium tests on every change.</p></div>
+        <div class="mini"><span class="tag">shipped · TAG Chemical, 2023</span><h3>CRM and QuickBooks rollout</h3>
+          <p>Replaced spreadsheet tracking of clients, inventory and products. I evaluated platforms, presented three to the CEO and service managers, tailored the winner with the vendor's team and trained everyone on it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 · Experience -->
+  <section class="chapter zone" id="experience" data-focus aria-labelledby="exp-h">
+    <div class="wrap">
+      <div class="chapter-head"><div class="num">03 / EXPERIENCE</div><div><h2 id="exp-h">Operations → software engineering</h2>
+        <p>Two halves of one career: years of making real operations run, and the engineering I now use to build the systems behind them.</p></div></div>
+      <div class="exp">
+        <div><h3>Operations and implementation</h3>
+          <div class="role"><div class="when">Jun – Dec 2023 · remote</div><h4>Operations Manager, TAG Chemical Technologies</h4><p>Implemented QuickBooks; led the CRM selection and rollout; designed and ran the daily delivery workflow for about 200 clients, two transport companies and one manufacturer.</p></div>
+          <div class="role"><div class="when">Feb – Jun 2023</div><h4>Assistant Manager, StretchLab</h4><p>Scheduling and progress tracking, team coordination and feedback, client follow-up and service planning.</p></div>
+          <div class="role"><div class="when">2013 – 2020</div><h4>Senior Operations & Team Lead, White Dragon Martial Arts</h4><p>Ran day-to-day operations for a school that grew from 86 to 172 students; led up to 12 staff and volunteers; built the onboarding, scheduling and documentation practices.</p></div>
+          <div class="role"><div class="when">2010 – 2013</div><h4>Assistant Manager, TNT Self Storage Management</h4><p>Revenue up 20% year over year; payment delinquencies down 15%.</p></div>
+          <div class="role"><div class="when">earlier</div><h4>Client Education Specialist, People-Trak</h4><p>Trained clients on HR software.</p></div>
+        </div>
+        <div><h3>Software engineering and automation</h3>
+          <div class="role"><div class="when">2025 – 2026</div><h4>M.S. Software Engineering, Western Governors University</h4><p>Software design and architecture, SDLC, Agile and Scrum, continuous integration and delivery, unit testing and QA automation.</p></div>
+          <div class="role"><div class="when">coursework</div><h4>Microservices order management · Python, Flask, GitLab CI, Selenium</h4><p>Services over REST with an automated test pipeline.</p></div>
+          <div class="role"><div class="when">coursework</div><h4>Inventory and order management · Python</h4><p>Hash tables, queues and priority queues for real-time inventory and urgent-first order handling.</p></div>
+          <div class="role"><div class="when">in progress</div><h4>Low Tide · Unity, C#, GitHub Actions, GameCI</h4><p>A mobile fishing game with a scan, test, build and deploy pipeline around it.</p></div>
+          <div class="role"><div class="when">2020 – 2022</div><h4>B.S. Business Management, WGU · founded CnP Alley, LLC</h4><p>Finished the degree full-time during the shutdowns and ran an online retail business.</p></div>
+        </div>
+      </div>
+      <p class="bridge">I've been the person on the other end of the software: rolling it out, training people on it, and keeping the day running when something breaks. I build with that person in mind.</p>
+    </div>
+  </section>
+
+  <!-- 04 · Contact -->
+  <section class="contact zone" id="contact" data-focus aria-labelledby="contact-h">
+    <div class="wrap">
+      <div class="kicker">04 / contact</div>
+      <h2 id="contact-h" style="margin-top:16px">Let's build something that <em>runs well.</em></h2>
+      <p>The fastest way to reach me is a message on LinkedIn. My code is on GitHub. I'm in La Mesa, California, open to on-site or hybrid roles around San Diego, or in Washington.</p>
+      <div class="ctas"><a class="btn" href="https://www.linkedin.com/in/mccollomcaitlin/" target="_blank" rel="noopener">Message me on LinkedIn</a><a class="btn ghost" href="https://github.com/caitmcc165" target="_blank" rel="noopener">GitHub</a></div>
+
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>© 2026 Caitlin McCollom</span><span class="credit">hibiscus model generated with Tripo3D</span><span>simulations: js/sim.js · tests: npm test</span></div></footer>
+<canvas id="flower-gl" aria-hidden="true"></canvas>
+
+<script src="js/sim.js"></script>
+<script>
+/* =========================================================================
+   UI for the three experiences. Uses the simulation module only; the 3D
+   renderer (module below) subscribes to the same delivery sim.
+   ========================================================================= */
+const S = window.CaitSim;
+const $ = id => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* surname: each letter's top leans toward the cursor, like stems in a breeze.
+   The base stays put (skew from the baseline); letters nearer the cursor lean more. */
+(() => {
+  const em = document.getElementById('surname'); if (!em || reduce) return;
+  const chars = [...em.textContent].map(c => { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = c; sp.setAttribute('aria-hidden', 'true'); return sp; });
+  em.textContent = ''; chars.forEach(c => em.appendChild(c));
+  const st = chars.map(() => ({ a:0, v:0 }));          // lean angle (deg) and its velocity, per letter
+  let mx = null, my = null, active = false, lastT = performance.now();
+  addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; if (!active){ active = true; lastT = performance.now(); requestAnimationFrame(tick); } }, { passive:true });
+  document.addEventListener('pointerleave', () => { mx = null; });
+  const q = new URLSearchParams(location.search).get('lean');   // screenshot helper: ?lean=x,y in px
+  if (q) { const [x, y] = q.split(',').map(Number); mx = x; my = y; active = true; requestAnimationFrame(tick); }
+  function tick(now){
+    const dt = Math.min(.05, (now - lastT) / 1000); lastT = now; let moving = false;
+    chars.forEach((c, i) => {
+      let target = 0;
+      if (mx !== null) {
+        const r = c.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height * .88;
+        const dx = mx - cx, dy = my - cy, dist = Math.hypot(dx, dy);
+        const pull = Math.max(0, 1 - dist / 800);                 // reaches ~800px; strongest near the letter
+        target = Math.max(-18, Math.min(18, (dx / (Math.abs(dy) + 90)) * 13)) * pull;   // lean toward the cursor's side
+      }
+      const s = st[i];
+      s.v += ((target - s.a) * 90 - s.v * 12) * dt; s.a += s.v * dt;      // quick spring, small overshoot
+      if (Math.abs(s.a) > .02 || Math.abs(s.v) > .02 || target) moving = true;
+      c.style.transform = `skewX(${(-s.a).toFixed(2)}deg)`;
+    });
+    if (moving || mx !== null) requestAnimationFrame(tick); else active = false;
+  }
+})();
+
+/* nav: transparent over the dark hero, solid on paper */
+const hdr = document.querySelector('header.top'), heroEl = document.querySelector('.hero');
+/* focus: the [data-focus] block crossing the middle of the screen (or the nearest one) is "in focus".
+   Its zone fades to dusk; the flower (if WebGL) docks beside it. Works without WebGL. */
+const focusEls = [...document.querySelectorAll('[data-focus]')], zones = [...document.querySelectorAll('.zone')];
+window.Focus = { el: heroEl };
+function updateFocus() {
+  const mid = innerHeight / 2; let best = null, bestD = Infinity;
+  for (const el of focusEls) { const r = el.getBoundingClientRect();
+    const d = mid < r.top ? r.top - mid : mid > r.bottom ? mid - r.bottom : 0; if (d < bestD) { bestD = d; best = el; } }
+  window.Focus.el = best;
+  const z = best.closest('.zone');
+  zones.forEach(x => x.classList.toggle('dark', x === z));
+  // the nav sits over whatever is under it: dark text treatment only over a dark surface
+  hdr.style.pointerEvents = 'none'; const under = document.elementFromPoint(innerWidth / 2, 30); hdr.style.pointerEvents = ''; const host = under && under.closest('.zone, .hero, footer');
+  hdr.classList.toggle('dark', !!host && (host.classList.contains('hero') || host.classList.contains('dark') || host.tagName === 'FOOTER'));
+  hdr.classList.toggle('clear', scrollY < 8);
+}
+addEventListener('scroll', updateFocus, { passive:true }); addEventListener('resize', updateFocus); updateFocus();
+/* grid transition into the technical work */
+new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }), { threshold: .08 }).observe($('work'));
+
+/* ---------------- Delivery Challenge ---------------- */
+const OUTAGE_AT = 180;   // 11:00
+const D = window.Delivery = {
+  sim: null, running: false, speed: 30, acc: 0, listeners: [],
+  reset() {
+    this.sim = S.createDelivery({ seed: 11 }); this.running = false; this.acc = 0;
+    $('run').textContent = 'Start the day'; $('result').className = 'result'; $('result').innerHTML = '';
+    setPressed('pol-z', 'pol-b', true); this.render(); this.listeners.forEach(f => f('reset'));
+  },
+  tick(dt) {                                     // advance by real seconds; returns fractional progress for smooth trucks
+    if (!this.running || this.sim.done) return 0;
+    this.acc += dt * this.speed;
+    while (this.acc >= 1 && !this.sim.done) {
+      if (this.sim.t === OUTAGE_AT) this.sim.setDown('B', true);
+      this.listeners.forEach(f => f('pre'));
+      this.sim.step(); this.acc -= 1;
+    }
+    if (this.sim.done){ this.running = false; this.finish(); }
+    this.render();
+    return Math.min(this.acc, 1);
+  },
+  render() {
+    const m = this.sim.metrics();
+    $('clk').textContent = m.time;
+    $('k-rate').textContent = (m.onTimeRate * 100).toFixed(m.onTimeRate === 1 ? 0 : 1) + '%';
+    $('k-rate').classList.toggle('bad', m.onTimeRate < .95);
+    $('k-del').textContent = m.delivered;
+    const lateish = m.late + m.overdue; $('k-late').textContent = lateish; $('k-late').classList.toggle('bad', lateish > 0);
+    $('k-wait').textContent = `${m.waiting.A} · ${m.waiting.B}`;
+    $('left').textContent = m.extraTrucksLeft;
+    const locked = this.sim.t < OUTAGE_AT;
+    $('addA').disabled = $('addB').disabled = locked || m.extraTrucksLeft <= 0;
+    $('pol-z').disabled = $('pol-b').disabled = locked;
+    $('lock').textContent = locked ? 'Controls unlock when something goes wrong.' : '';
+    $('log').innerHTML = this.sim.events.slice(-6).reverse().map(e => `<li class="${e.kind}"><span>${e.time}</span><span>${e.text}</span></li>`).join('')
+      || '<li><span></span><span>Start the day. Orders begin arriving at 8:00.</span></li>';
+  },
+  finish() {
+    const s = this.sim, m = s.metrics(), rate = m.onTimeRate, ok = rate >= .95;
+    const rerouted = s.policy === 'balance';
+    const toA = s.decisions.filter(d => d.what === 'truck:A').length, toB = s.decisions.filter(d => d.what === 'truck:B').length;
+    const first = s.decisions.find(d => d.t >= OUTAGE_AT), mins = first ? first.t - OUTAGE_AT : null;
+    const when = first ? `${s.clock(first.t)}, ${mins} minutes after the breakdown` : 'never';
+    let insight;
+    if (ok) insight = `You responded at ${when}: rerouted around the failed carrier and added capacity where the volume landed. ${mins <= 45 ? 'That speed is what kept the backlog from forming.' : 'A faster response would leave more margin.'}`;
+    else if (!rerouted) insight = 'Orders for carrier B\'s zone sat at an offline depot all day. Rerouting is the first move: switch to <b>Balance load</b> soon after 11:00.';
+    else if (toB > 0 && toA < 2) insight = `Extra trucks went to carrier B, which is offline, so they never left the depot. The volume moved to A; that's where capacity was needed.`;
+    else if (toA < 2) insight = 'Rerouting helped: carrier A picked up B\'s orders and triaged the ones it could still deliver on time. But A didn\'t have the trucks for twice the volume. Rerouting needs capacity behind it.';
+    else insight = `The right moves, but they came at ${when}. By then a backlog had built that the extra trucks couldn't fully clear.`;
+    $('result').innerHTML = `<div><div class="score">${(rate * 100).toFixed(1)}%</div><div class="disclose">${ok ? 'goal met' : 'goal: 95%'}</div></div>
+      <div><h4>${ok ? 'Day saved.' : 'The day got away.'}</h4><p>${insight}</p>
+      <p><b>The real version:</b> at TAG Chemical I coordinated daily deliveries between about 200 clients, two transport companies and one manufacturer: client communication, logistics coordination, product movement and delivery follow-up. Same seed, same day: press Reset to replay with different choices.</p></div>`;
+    $('result').className = 'result on';
+  },
+};
+function setPressed(a, b, first) { $(a).setAttribute('aria-pressed', first); $(b).setAttribute('aria-pressed', !first); }
+$('run').onclick = () => { if (D.sim.done) D.reset(); D.running = !D.running; $('run').textContent = D.running ? 'Pause' : 'Resume'; D.listeners.forEach(f => f('run')); };
+$('reset').onclick = () => D.reset();
+$('sp1').onclick = () => { D.speed = 30; setPressed('sp1', 'sp3', true); };
+$('sp3').onclick = () => { D.speed = 90; setPressed('sp1', 'sp3', false); };
+$('pol-z').onclick = () => { D.sim.setPolicy('zones'); setPressed('pol-z', 'pol-b', true); D.render(); };
+$('pol-b').onclick = () => { D.sim.setPolicy('balance'); setPressed('pol-z', 'pol-b', false); D.render(); };
+$('addA').onclick = () => { D.sim.addTruck('A'); D.render(); D.listeners.forEach(f => f('trucks')); };
+$('addB').onclick = () => { D.sim.addTruck('B'); D.render(); D.listeners.forEach(f => f('trucks')); };
+D.reset();
+/* if WebGL never takes over the loop, drive the simulation from here so the panel still works */
+let last = performance.now();
+(function plainLoop(now) { if (!window.__glLoop) { D.tick(Math.min((now - last) / 1000, .1)); } last = now; requestAnimationFrame(plainLoop); })(last);
+
+/* ---------------- Break the deployment ---------------- */
+const faultsEl = $('faults');
+Object.entries(S.FAULTS).forEach(([k, f]) => faultsEl.insertAdjacentHTML('beforeend', `<label class="fault"><input type="checkbox" value="${k}">${f.label}</label>`));
+const stagesEl = $('stages');
+function drawStages(stages) {
+  stagesEl.innerHTML = stages.map(s => `<li class="${s.status || ''}"><span>${s.name}</span><span class="st">${s.status === 'passed' ? '✓ passed' : s.status === 'failed' ? '✕ failed' : s.status === 'skipped' ? 'skipped' : s.status === 'running' ? 'running…' : 'not run'}</span></li>`).join('');
+}
+drawStages(S.STAGES);
+let shipping = false;
+$('ship').onclick = () => {
+  if (shipping) return; shipping = true; $('ship').disabled = true;
+  const faults = [...faultsEl.querySelectorAll('input:checked')].map(i => i.value);
+  const run = S.runPipeline(faults), shown = S.STAGES.map(s => ({ ...s }));
+  const fmt = s => `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, '0')}s`;
+  $('verdict').className = 'verdict'; $('verdict').textContent = 'Running…';
+  let i = 0;
+  const next = () => {
+    if (i >= run.stages.length) {
+      const v = $('verdict');
+      if (run.deployed) { v.className = 'verdict good'; v.innerHTML = `<b>Merged and deployed.</b> Every check passed; a playable WebGL build was published (${fmt(run.elapsed)}).`; }
+      else { const st = run.stages.find(s => s.status === 'failed'); v.className = 'verdict bad';
+        v.innerHTML = `<b>Stopped at ${st.name}.</b> ${S.FAULTS[st.fault].why} Nothing merged or deployed. Fix it and push to the branch again.`; }
+      shipping = false; $('ship').disabled = false; return;
+    }
+    shown[i] = { ...run.stages[i], status: run.stages[i].status === 'skipped' ? 'skipped' : 'running' }; drawStages(shown);
+    setTimeout(() => { shown[i] = run.stages[i]; drawStages(shown); i++; next(); }, reduce ? 0 : (run.stages[i].status === 'skipped' ? 60 : 380));
+  };
+  next();
+};
+
+/* ---------------- Order engine ---------------- */
+let batch = 3;
+function runEngine() {
+  const orders = S.makeOrders(100, batch);
+  const lanes = [['fifo', 'FIFO queue', 'first come, first served'], ['priority', 'Priority queue', 'binary heap, urgent first']];
+  $('lanes').innerHTML = lanes.map(([k, t, sub]) => {
+    const r = S.runOrderEngine(orders, k);
+    const dots = r.results.map(d => `<i class="${d.urgent ? 'u' : ''} ${d.late ? 'late' : ''}" title="order ${d.id}${d.urgent ? ' · urgent' : ''}${d.late ? ' · late' : ''}"></i>`).join('');
+    return `<div class="lane"><h4>${t}<span>${sub}</span></h4><div class="dots">${dots}</div>
+      <div class="m">urgent late <b class="${r.urgentLate ? 'bad' : ''}">${r.urgentLate} of ${r.urgent}</b><br>all late <b>${r.late}</b> · longest queue <b>${r.maxQueue}</b>${k === 'priority' ? `<br>heap swaps <b>${r.heapSwaps}</b>` : ''}</div></div>`;
+  }).join('');
+  $('oe-batch').textContent = `batch #${batch} · same orders in both lanes`;
+}
+$('oe-run').onclick = runEngine;
+$('oe-new').onclick = () => { batch++; runEngine(); };
+runEngine();
+</script>
+
+<script type="importmap">{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script type="module">
+/* =========================================================================
+   The Delivery Challenge diorama: an art-directed miniature that only
+   *displays* the simulation's state (window.Delivery.sim).
+   ========================================================================= */
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const D = window.Delivery, stage = document.getElementById('stage'), canvas = document.getElementById('gl');
+const css = getComputedStyle(document.documentElement), C = k => new THREE.Color(css.getPropertyValue(k).trim());
+const COL = { salt:C('--paper'), salt2:C('--card'), sand:C('--sand'), sand2:C('--sand-2'), ink:C('--ink'), ocean:C('--plum'), seaglass:C('--plum-soft'), coral:C('--alert'), petal:C('--apricot') };
+const qs = new URLSearchParams(location.search);
+
+let renderer;
+try { renderer = new THREE.WebGLRenderer({ canvas, antialias:true }); } catch (e) { throw e; }
+stage.classList.add('live'); window.__glLoop = true;
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setClearColor(COL.salt, 1);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+
+const camera = new THREE.PerspectiveCamera(30, 1, .5, 200);
+camera.position.set(2.2, 24, 30);
+const controls = new OrbitControls(camera, canvas);
+controls.target.set(2.2, 0, -1.4); controls.enableDamping = true; controls.enablePan = false;
+controls.minDistance = 26; controls.maxDistance = 48; controls.minPolarAngle = .45; controls.maxPolarAngle = 1.05;
+controls.minAzimuthAngle = -.7; controls.maxAzimuthAngle = .7;
+
+const sun = new THREE.DirectionalLight(0xfff1df, 2.3); sun.position.set(-10, 18, 9); sun.castShadow = true;
+Object.assign(sun.shadow.camera, { left:-20, right:20, top:12, bottom:-12, near:1, far:60 }); sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -.0004; sun.shadow.normalBias = .02;
+scene.add(sun, new THREE.HemisphereLight(0xfffaf0, COL.sand, .35));
+
+/* materials: matte painted wood, ceramic, sea glass */
+const mat = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness:.82, metalness:0, envMapIntensity:.55, ...o });
+const M = {
+  plinth: mat(COL.sand, { roughness:.95 }), road: mat(new THREE.Color('#EBCDBE'), { roughness:.98 }),
+  wall: mat(COL.salt2), wall2: mat(new THREE.Color('#FBEADF')), wall3: mat(new THREE.Color('#F6DCCD')),
+  roofInk: mat(new THREE.Color('#3B2A63'), { roughness:.7 }), roofA: mat(COL.ocean, { roughness:.6 }), roofB: mat(COL.petal, { roughness:.6 }),
+  roofS1: mat(new THREE.Color('#FFB59A')), roofS2: mat(new THREE.Color('#FFC2CC')), roofS3: mat(new THREE.Color('#FFD08A')),
+  dark: mat(new THREE.Color('#2A2145'), { roughness:.6 }), win: mat(new THREE.Color('#4B4370'), { roughness:.3 }),
+  water: new THREE.MeshPhysicalMaterial({ color:new THREE.Color('#78C2CB'), roughness:.12, metalness:0, clearcoat:1, clearcoatRoughness:.08, envMapIntensity:1 }),
+  shore: mat(COL.seaglass, { roughness:.4 }),
+};
+const box = (w, h, d, m, r = .06) => { const g = new RoundedBoxGeometry(w, h, d, 3, Math.min(r, w/2 - .001, h/2 - .001, d/2 - .001)); const o = new THREE.Mesh(g, m); o.castShadow = o.receiveShadow = true; return o; };
+const prism = (w, h, d, m) => { const s = new THREE.Shape(); s.moveTo(-w/2, 0); s.lineTo(w/2, 0); s.lineTo(0, h); s.closePath();
+  const g = new THREE.ExtrudeGeometry(s, { depth:d, bevelEnabled:true, bevelThickness:.02, bevelSize:.02, bevelSegments:2 }); g.translate(0, 0, -d/2);
+  const o = new THREE.Mesh(g, m); o.castShadow = o.receiveShadow = true; return o; };
+const W = (x, y) => new THREE.Vector3(x, 0, -y);          // sim map → world (north street is farther away)
+
+const L = D.sim.layout, root = new THREE.Group(); scene.add(root);
+const rise = [];                                            // objects that rise in once, on first view
+const pick = [];                                            // clickable buildings
+
+/* plinth, water, shore */
+const plinth = box(33, .8, 18.5, M.plinth, .3); plinth.position.set(3, -.4, 0); root.add(plinth);
+const water = box(4.2, .5, 18.1, M.water, .2); water.position.set(17.1, -.22, 0); root.add(water);
+const shore = box(.35, .06, 18.1, M.shore, .03); shore.position.set(14.85, .01, 0); root.add(shore);
+
+/* roads */
+function road(a, b, w = .55) { const A = W(a.x, a.y), B = W(b.x, b.y), len = A.distanceTo(B);
+  const r = box(len + w, .04, w, M.road, .02); r.position.copy(A).lerp(B, .5).setY(.02); r.rotation.y = -Math.atan2(B.z - A.z, B.x - A.x); r.castShadow = false; root.add(r); }
+for (const st of ['N', 'S']) { const s = L.streets[st]; road({ x:s.x0, y:s.y }, { x:s.x1, y:s.y });
+  for (const c of ['A', 'B']) road(L.depots[c], { x:s.x0, y:s.y }, .45); }
+for (const c of ['A', 'B']) road(L.manufacturer, L.depots[c], .45);
+road(L.depots.A, L.depots.B, .35);
+
+/* manufacturer: a long hall with a sawtooth roof */
+const mfr = new THREE.Group(); const mp = W(L.manufacturer.x, L.manufacturer.y); mfr.position.copy(mp);
+const hall = box(4.4, 1.5, 3.4, M.wall, .1); hall.position.y = .75; mfr.add(hall);
+for (let i = 0; i < 4; i++){ const p = prism(1.1, .55, 3.3, i % 2 ? M.roofInk : M.wall2); p.position.set(-1.65 + i * 1.1, 1.5, 0); mfr.add(p); }
+const dock = box(1.2, .25, 2.2, M.wall3, .05); dock.position.set(2.75, .125, 0); mfr.add(dock);
+const door = box(.05, .9, 1.4, M.dark, .02); door.position.set(2.21, .55, 0); mfr.add(door);
+mfr.userData.info = 'manufacturer'; root.add(mfr); pick.push(mfr); rise.push(mfr);
+
+/* carrier depots */
+const depots = {};
+for (const c of ['A', 'B']) {
+  const g = new THREE.Group(); g.position.copy(W(L.depots[c].x, L.depots[c].y));
+  const b = box(2.6, 1.0, 2.0, M.wall, .08); b.position.y = .5; g.add(b);
+  const roof = box(2.85, .16, 2.25, c === 'A' ? M.roofA : M.roofB, .06); roof.position.y = 1.08; g.add(roof);
+  const bay = box(.05, .7, 1.3, M.dark, .02); bay.position.set(1.31, .37, 0); g.add(bay);
+  const lamp = new THREE.Mesh(new THREE.SphereGeometry(.12, 20, 14), new THREE.MeshStandardMaterial({ color:COL.seaglass, emissive:COL.seaglass, emissiveIntensity:.6 }));
+  lamp.position.set(-.9, 1.3, .7); g.add(lamp);
+  g.userData = { info:'depot', carrier:c, lamp, bay }; root.add(g); pick.push(g); rise.push(g); depots[c] = g;
+}
+
+/* 24 client sites: small coastal buildings, varied but from one family */
+const houses = [], roofs = [M.roofS1, M.roofS2, M.roofS3, M.roofS1], walls = [M.wall, M.wall2, M.wall3];
+L.clients.forEach((cl, i) => {
+  const g = new THREE.Group(); g.position.copy(W(cl.x, cl.y));
+  const h = .5 + ((i * 37) % 5) * .07, w = .8 + ((i * 13) % 3) * .08;
+  const base = box(w, h, .72, walls[i % 3], .05); base.position.y = h / 2; g.add(base);
+  const roof = prism(w + .12, .36, .82, roofs[i % 4]); roof.position.y = h; roof.rotation.y = Math.PI / 2 * ((i >> 1) % 2); g.add(roof);
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(.2, .16), new THREE.MeshStandardMaterial({ color:'#4B4370', emissive:new THREE.Color('#FFB07A'), emissiveIntensity:0 }));
+  win.position.set(0, h * .55, cl.y > (cl.street === 'N' ? L.streets.N.y : L.streets.S.y) ? .37 : -.37); win.rotation.y = win.position.z < 0 ? Math.PI : 0; g.add(win);
+  g.userData = { info:'client', id:cl.id, win, flash:0 }; root.add(g); pick.push(g); rise.push(g); houses.push(g);
+});
+
+/* order tokens: one instanced mesh, coral only when late */
+const MAX = 700, puck = new THREE.InstancedMesh(new THREE.CylinderGeometry(.16, .16, .1, 24), new THREE.MeshStandardMaterial({ color:0xffffff, roughness:.45, envMapIntensity:.7 }), MAX);
+puck.castShadow = true; puck.count = 0; root.add(puck);
+const dummy = new THREE.Object3D(), cOK = new THREE.Color('#FFFAF6'), cLate = COL.coral.clone();
+
+/* trucks */
+const truckMeshes = new Map();
+function makeTruck(carrier) {
+  const g = new THREE.Group();
+  const bed = box(.95, .12, .5, M.dark, .04); bed.position.set(-.1, .2, 0); g.add(bed);
+  const cab = box(.34, .36, .48, carrier === 'A' ? M.roofA : M.roofB, .07); cab.position.set(.5, .33, 0); g.add(cab);
+  const glass = box(.04, .14, .38, M.win, .02); glass.position.set(.68, .4, 0); g.add(glass);
+  for (const [x, z] of [[-.38, .25], [-.38, -.25], [.45, .25], [.45, -.25]]) {
+    const w = new THREE.Mesh(new THREE.CylinderGeometry(.1, .1, .07, 16), M.dark); w.rotation.x = Math.PI / 2; w.position.set(x, .1, z); w.castShadow = true; g.add(w); }
+  g.scale.setScalar(1.35); root.add(g); return g;
+}
+function syncTrucks() { for (const k of D.sim.trucks) if (!truckMeshes.has(k.id)) truckMeshes.set(k.id, { g:makeTruck(k.carrier), px:k.x, py:k.y, ph:k.heading }); }
+D.listeners.push(ev => {
+  if (ev === 'reset') { for (const v of truckMeshes.values()) root.remove(v.g); truckMeshes.clear(); syncTrucks(); }
+  if (ev === 'trucks') syncTrucks();
+  if (ev === 'pre') for (const k of D.sim.trucks) { const v = truckMeshes.get(k.id); if (v){ v.px = k.x; v.py = k.y; v.ph = k.heading; } }
+});
+syncTrucks();
+
+/* where each order token sits, given the simulation state */
+const stackAt = (base, n, i, cols = 4, rows = 3) => { const layer = Math.floor(i / (cols * rows)), j = i % (cols * rows);
+  return base.clone().add(new THREE.Vector3((j % cols - (cols - 1) / 2) * .36, .07 + layer * .105, (Math.floor(j / cols) - (rows - 1) / 2) * .36)); };
+const anchors = { M: mp.clone().add(new THREE.Vector3(2.75, .25, 0)), A: depots.A.position.clone().add(new THREE.Vector3(2.25, 0, 0)), B: depots.B.position.clone().add(new THREE.Vector3(2.25, 0, 0)) };
+function layoutTokens(alpha) {
+  const sim = D.sim, t = sim.t; let n = 0; const count = { M:0, A:0, B:0 };
+  const put = (p, late, sc = 1) => { if (n >= MAX) return; dummy.position.copy(p); dummy.rotation.set(0, 0, 0); dummy.scale.setScalar(sc); dummy.updateMatrix(); puck.setMatrixAt(n, dummy.matrix); puck.setColorAt(n, late ? cLate : cOK); n++; };
+  const truckLoad = new Map();
+  for (const o of sim.orders) {
+    if (o.stage === 'delivered') continue;
+    const late = t > o.due;
+    if (o.stage === 'prep') put(stackAt(anchors.M, 0, count.M++, 3, 4), late);
+    else if (o.stage === 'handoff') { const from = o.from === 'M' ? anchors.M : anchors[o.from], to = anchors[o.carrier];
+      const k = Math.min(1, Math.max(0, (t + alpha - o.leftAt) / Math.max(1, o.at - o.leftAt))); put(from.clone().lerp(to, k).setY(.12 + Math.sin(k * Math.PI) * .25), late); }
+    else if (o.stage === 'waiting') put(stackAt(anchors[o.carrier], 0, count[o.carrier]++), late);
+    else if (o.stage === 'transit') { const i = truckLoad.get(o.truck) || 0; truckLoad.set(o.truck, i + 1);
+      const v = truckMeshes.get(o.truck); if (v) { const local = new THREE.Vector3(-.36 + (i % 4) * .19, .31, i < 4 ? -.11 : .11); put(local.applyMatrix4(v.g.matrixWorld), late, .62); } }
+  }
+  puck.count = n; puck.instanceMatrix.needsUpdate = true; if (puck.instanceColor) puck.instanceColor.needsUpdate = true;
+}
+
+/* selection → stable HTML panel (no labels floating in 3D) */
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(); let selected = null, downAt = null;
+canvas.addEventListener('pointerdown', e => downAt = [e.clientX, e.clientY]);
+canvas.addEventListener('pointerup', e => {
+  if (!downAt || Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5) return;
+  const r = canvas.getBoundingClientRect(); ndc.set((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ndc, camera); const hit = ray.intersectObjects(pick, true)[0];
+  let g = hit && hit.object; while (g && !g.userData.info) g = g.parent; selected = g || null; describe();
+});
+function describe() {
+  const el = document.getElementById('inspect'), sim = D.sim, m = sim.metrics();
+  if (!selected) { el.innerHTML = 'Click a building to inspect it.'; return; }
+  const u = selected.userData;
+  if (u.info === 'manufacturer') el.innerHTML = `<b>Manufacturer.</b> ${m.prep} order${m.prep === 1 ? '' : 's'} being prepped; each takes about 20 minutes before handoff to a carrier.`;
+  if (u.info === 'depot') { const c = u.carrier, trucks = sim.trucks.filter(k => k.carrier === c), out = trucks.filter(k => k.state === 'route').length;
+    el.innerHTML = `<b>Carrier ${c} depot</b> · ${sim.down[c] ? '<span style="color:var(--alert-text)">offline</span>' : 'online'}. ${m.waiting[c]} waiting, ${m.handoff[c]} on the way in. ${trucks.length} trucks, ${out} on the road. Serves the ${c === 'A' ? 'north' : 'south'} street under fixed zones.`; }
+  if (u.info === 'client') { const mine = sim.orders.filter(o => o.client === u.id), done = mine.filter(o => o.stage === 'delivered');
+    el.innerHTML = `<b>Client site ${u.id + 1}</b> · ${L.clients[u.id].street === 'N' ? 'north' : 'south'} street. ${mine.length} orders today, ${done.length} delivered, ${done.filter(o => o.late).length} late.`; }
+}
+
+/* loop: only while visible */
+function resize() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+let visible = true, last = performance.now(), born = null;
+new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible && born === null) born = performance.now(); }, { threshold:.15 }).observe(stage);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+rise.forEach(o => { o.userData.baseY = o.scale.y; if (!reduce && !qs.get('sim')) o.scale.y = .001; });
+const prevStep = { t:-1 };
+function frame(now, fixed) {
+  const dt = fixed ?? Math.min((now - last) / 1000, .1); last = now;
+  const alpha = D.tick(dt) || 0;
+  if (born !== null && !reduce) rise.forEach((o, i) => { const k = Math.min(1, Math.max(0, ((now - born) / 1000 - i * .018) / .6)); o.scale.y = Math.max(.001, 1 - Math.pow(1 - k, 3)); });
+  for (const k of D.sim.trucks) { const v = truckMeshes.get(k.id); if (!v) continue;
+    const moving = D.running && !D.sim.done, a = moving ? alpha : 1;
+    const x = v.px + (k.x - v.px) * a, y = v.py + (k.y - v.py) * a; v.g.position.copy(W(x, y));
+    let dh = k.heading - v.ph; dh = Math.atan2(Math.sin(dh), Math.cos(dh)); v.g.rotation.y = v.ph + dh * a; }
+  root.updateMatrixWorld(); layoutTokens(alpha);
+  // delivery flashes and depot status
+  for (const o of D.sim.orders) if (o.stage === 'delivered' && o.delivered === D.sim.t - 1 && !o._flashed) { o._flashed = true; houses[o.client].userData.flash = 1; }
+  houses.forEach(h => { const u = h.userData; u.flash = Math.max(0, u.flash - dt * 1.4); u.win.material.emissiveIntensity = u.flash * 1.6; });
+  for (const c of ['A', 'B']) { const u = depots[c].userData, down = D.sim.down[c];
+    u.lamp.material.color.copy(down ? COL.coral : COL.seaglass); u.lamp.material.emissive.copy(down ? COL.coral : COL.seaglass); u.lamp.material.emissiveIntensity = down ? .9 + Math.sin(now / 300) * .3 : .5; }
+  if (selected && D.running) describe();
+  controls.update(); renderer.render(scene, camera);
+}
+function loop(now) { if (visible && !document.hidden) frame(now); else { D.tick(Math.min((now - last) / 1000, .1)); last = now; } requestAnimationFrame(loop); }
+
+/* ?sim=<seconds>&choices=balance,addA2 : deterministic screenshots */
+if (qs.get('sim')) {
+  const choices = (qs.get('choices') || '').split(',');
+  D.running = true; let applied = false;
+  for (let i = 0; i < parseFloat(qs.get('sim')) * 60; i++) {
+    if (!applied && D.sim.t > 200) { applied = true; if (choices.includes('balance')) document.getElementById('pol-b').click();
+      if (choices.includes('addA2')) { D.sim.addTruck('A'); D.sim.addTruck('A'); syncTrucks(); } }
+    frame(performance.now(), 1/60);
+  }
+  D.running = false; frame(performance.now(), 0);
+} else requestAnimationFrame(loop);
+</script>
+
+<script type="module">
+/* =========================================================================
+   The hibiscus. One fixed, full-screen, pointer-transparent canvas.
+   · In the hero it sits in the right column, leans toward the cursor.
+   · Scrolling down it shrinks and docks on the right edge, bloom turned away
+     so its base points left at the content, spinning about its own axis.
+   · Spin speed ramps with scroll depth to a steady maximum; fast scrolling
+     (either way) kicks it, and the kick decays back to the steady speed.
+   · It glides vertically to whichever [data-focus] block is in focus
+     (window.Focus, set by the page script) and sticks to it while it's
+     centered.
+   Model: Tripo3D generation, optimized to assets/hibiscus.glb. Served over http(s) it's fetched directly;
+   opened from file:// it falls back to the base64 copy in assets/hibiscus.glb.js (build with tools/prepare-flower.sh).
+   ========================================================================= */
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const canvas = document.getElementById('flower-gl'), anchor = document.getElementById('flower'), hero = document.querySelector('.hero');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sstep = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+// get the model bytes: fetch over http(s); from file:// (no fetch) load the base64 fallback script
+async function modelBytes() {
+  if (location.protocol !== 'file:') { const r = await fetch('assets/hibiscus.glb'); if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); }
+  if (!window.HIBISCUS_GLB) await new Promise((ok, fail) => { const sc = document.createElement('script'); sc.src = 'assets/hibiscus.glb.js'; sc.onload = ok; sc.onerror = fail; document.head.appendChild(sc); });
+  return Uint8Array.from(atob(window.HIBISCUS_GLB), c => c.charCodeAt(0)).buffer;
+}
+const bytesP = modelBytes().catch(err => { console.warn('hibiscus model unavailable', err); return null; });
+if (await bytesP) {
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.1;
+  const scene = new THREE.Scene();
+  scene.environment = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), .04).texture;
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 6000);   // 1 world unit = 1 CSS pixel
+  camera.position.set(0, 0, 3000);
+  const key = new THREE.DirectionalLight(0xfff0e4, 2.4); key.position.set(-3, 4, 4);
+  const rim = new THREE.DirectionalLight(0xffb48c, 5.5); rim.position.set(2.5, 2, -4);
+  scene.add(key, rim, new THREE.HemisphereLight(0xfff2ea, 0x2a1a55, .6));
+
+  /* The stamen axis (stem stub at the back → stigma tips), in the normalized model space below
+     (centered on its bounding box, largest side = 1). Measured from orthographic front and side
+     renders of the raw model (?debugPose=front|side); the pollen cluster sits on this line.
+     EYE is the point on the axis closest to the bloom's centroid, used as the pivot. */
+  const EYE = new THREE.Vector3(-0.0355, 0.0697, -0.0076);
+  const AXIS = new THREE.Vector3(0.444, 0.832, 0.333).normalize();
+  const Z = new THREE.Vector3(0, 0, 1);
+  const qAlign = new THREE.Quaternion().setFromUnitVectors(AXIS, Z), qAlignInv = qAlign.clone().invert();
+  // root (place, size, pose) → spin (about local Z) → align (stamen → Z) → offset (receptacle at the origin) → model
+  const root = new THREE.Group(), spin = new THREE.Group(), align = new THREE.Group(), offset = new THREE.Group();
+  align.quaternion.copy(qAlign); offset.position.copy(EYE).negate();
+  root.add(spin); spin.add(align); align.add(offset); scene.add(root);
+  const bytes = await bytesP;
+  const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+  loader.parse(bytes, '', gltf => {
+    const model = gltf.scene, box = new THREE.Box3().setFromObject(model);
+    const size = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3()), k = 1 / Math.max(size.x, size.y, size.z);
+    model.position.copy(c).multiplyScalar(-k); model.scale.setScalar(k);           // centered, unit-sized; root scale = pixels
+    model.traverse(o => { if (o.isMesh && o.material) { const m = o.material;
+      o.material = new THREE.MeshPhysicalMaterial({ map:m.map, normalMap:m.normalMap, roughnessMap:m.roughnessMap, color:m.color, roughness:Math.max(.45, m.roughness ?? .6),
+        metalness:0, sheen:.6, sheenRoughness:.45, sheenColor:new THREE.Color('#FFC2CC'), side:THREE.DoubleSide, envMapIntensity:.7 }); } });
+    offset.add(model); canvas.classList.add('ready');
+
+  }, e => console.warn('hibiscus failed to load', e));
+
+  let W = innerWidth, H = innerHeight;
+  function resize(){ W = innerWidth; H = innerHeight; renderer.setSize(W, H, false);
+    Object.assign(camera, { left:-W/2, right:W/2, top:H/2, bottom:-H/2 }); camera.updateProjectionMatrix(); }
+  addEventListener('resize', resize); resize();
+
+  /* hero cursor lean (spring) */
+  const ptr = { x:0, y:0, vx:0, vy:0, lx:null, ly:null, lt:0 }, lean = { x:0, y:0, vx:0, vy:0 };
+  if (!reduce) addEventListener('pointermove', e => {
+    const r = hero.getBoundingClientRect(); if (e.clientY > r.bottom) { ptr.x = ptr.y = 0; return; }
+    ptr.x = e.clientX / W * 2 - 1; ptr.y = (e.clientY - r.top) / r.height * 2 - 1;
+    const now = performance.now(), dt = Math.max(8, now - ptr.lt);
+    if (ptr.lx !== null) { ptr.vx = (e.clientX - ptr.lx) / dt; ptr.vy = (e.clientY - ptr.ly) / dt; }
+    ptr.lx = e.clientX; ptr.ly = e.clientY; ptr.lt = now; }, { passive:true });
+
+  /* spin: steady speed that ramps with depth, plus a decaying kick from scroll velocity */
+  const SPIN_MAX = .7;                // rad/s ≈ 6.7 rpm once you're past the hero
+  let theta = 0, kick = 0, lastY = scrollY, lastT = performance.now();
+  /* vertical lock: a spring toward the focused block */
+  const dockY = { y:H / 2, v:0 };
+
+  const qHero = new THREE.Quaternion(), qDock = new THREE.Quaternion(), e = new THREE.Euler();
+  // docked: stamen (+Z after align) turned toward +X, away from the content, and ~25° back toward the viewer; the base points left
+  qDock.setFromEuler(new THREE.Euler(-.12, Math.PI / 2 - .45, 0, 'YXZ'));
+
+  function frame(now){
+    const dt = Math.min(.05, (now - lastT) / 1000); lastT = now;
+    const y = scrollY, heroH = hero.offsetHeight;
+    const b = sstep(.12, .85, y / heroH);                         // 0 = hero pose, 1 = docked
+    const narrow = W < 1100;
+
+    // scroll velocity → kick (either direction), decays back toward the steady spin
+    const sv = dt > 0 ? (y - lastY) / dt : 0; lastY = y;
+    if (!reduce) { kick += sv * .0015; kick = Math.max(-4.5, Math.min(4.5, kick)); kick *= Math.exp(-2.4 * dt);
+      theta += (SPIN_MAX * sstep(0, 1.6 * H, y) + kick) * dt;
+      // returning to the hero: ease the spin home (nearest full turn) so the bloom faces you again
+      const home = Math.round(theta / (2 * Math.PI)) * 2 * Math.PI, pull = Math.pow(1 - b, 2);
+      theta += (home - theta) * Math.min(1, pull * 5 * dt); }
+
+    // hero lean spring
+    lean.vx += ((ptr.y * .16 - lean.x) * 70 - lean.vx * 11) * dt + ptr.vy * .018;
+    lean.vy += ((ptr.x * .28 - lean.y) * 70 - lean.vy * 11) * dt + ptr.vx * .018;
+    ptr.vx *= .82; ptr.vy *= .82; lean.x += lean.vx * dt; lean.y += lean.vy * dt;
+    const t = reduce ? 0 : now / 1000;
+    e.set(-.12 + lean.x + Math.sin(t * 2 * Math.PI / 7) * .025, -.05 + lean.y + Math.sin(t * 2 * Math.PI / 11) * .05, .12 - lean.y * .15, 'XYZ');
+    qHero.setFromEuler(e).multiply(qAlignInv);          // hero pose looks as before; spin still happens about the stamen
+    const dbg = new URLSearchParams(location.search).get('debugPose');   // tooling: raw model, front or side view
+    if (dbg) { qHero.setFromEuler(new THREE.Euler(0, dbg === 'side' ? Math.PI / 2 : 0, 0)).multiply(qAlignInv); theta = 0; }
+
+    // where: hero anchor (scrolls with the page) → right edge, locked to the focused block
+    const a = anchor.getBoundingClientRect();
+    const heroX = a.left + a.width * .55, heroYc = a.top + a.height * .5, heroS = Math.min(a.height * .95, a.width * 1.15);
+    const dockS = Math.max(170, Math.min(280, W * .17)), dockX = W - dockS * .45;   // in from the edge; the stem stub points left at the content
+    let ty = H / 2; const f = window.Focus && window.Focus.el;
+    if (f && f !== hero) { const r = f.getBoundingClientRect(), m = Math.min(dockS * .55, r.height / 2);
+      ty = Math.min(Math.max(H / 2, r.top + m), r.bottom - m); }
+    if (reduce) { dockY.y = ty; dockY.v = 0; }
+    else { dockY.v += ((ty - dockY.y) * 38 - dockY.v * 10.5) * dt; dockY.y += dockY.v * dt; }
+
+    const sx = heroX + (dockX - heroX) * b, sy = heroYc + (dockY.y - heroYc) * b, size = heroS + (dockS - heroS) * b;
+    root.position.set(sx - W / 2, H / 2 - sy, 0); root.scale.setScalar(size);
+    root.quaternion.copy(qHero).slerp(qDock, b);
+    spin.quaternion.setFromAxisAngle(Z, theta);
+    canvas.style.opacity = narrow ? String(1 - b) : '';
+    renderer.render(scene, camera);
+  }
+  function loop(now){ if (!document.hidden) frame(now); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+  window.__flowerFrame = frame;   // used by screenshot tooling
+} else canvas.remove();
+</script>
+</body>
+</html>

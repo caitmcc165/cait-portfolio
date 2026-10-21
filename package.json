@@ -1,0 +1,5 @@
+{
+  "name": "cait-portfolio",
+  "private": true,
+  "scripts": { "test": "node --test tests/sim.test.js" }
+}
